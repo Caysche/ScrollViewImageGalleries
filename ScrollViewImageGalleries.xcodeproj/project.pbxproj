@@ -14,6 +14,7 @@
 		623616011D9064090024082F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 623616001D9064090024082F /* Assets.xcassets */; };
 		623616041D9064090024082F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 623616021D9064090024082F /* LaunchScreen.storyboard */; };
 		6236160C1D90668B0024082F /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6236160B1D90668B0024082F /* Images.xcassets */; };
+		6236160F1D907EA70024082F /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6236160E1D907EA70024082F /* DetailViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,8 @@
 		623616031D9064090024082F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		623616051D9064090024082F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6236160B1D90668B0024082F /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		6236160D1D907EA70024082F /* DetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
+		6236160E1D907EA70024082F /* DetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +67,8 @@
 				623615F81D9064080024082F /* AppDelegate.m */,
 				623615FA1D9064090024082F /* ViewController.h */,
 				623615FB1D9064090024082F /* ViewController.m */,
+				6236160D1D907EA70024082F /* DetailViewController.h */,
+				6236160E1D907EA70024082F /* DetailViewController.m */,
 				623615FD1D9064090024082F /* Main.storyboard */,
 				623616001D9064090024082F /* Assets.xcassets */,
 				6236160B1D90668B0024082F /* Images.xcassets */,
@@ -156,6 +161,7 @@
 				623615FC1D9064090024082F /* ViewController.m in Sources */,
 				623615F91D9064090024082F /* AppDelegate.m in Sources */,
 				623615F61D9064080024082F /* main.m in Sources */,
+				6236160F1D907EA70024082F /* DetailViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
