@@ -38,7 +38,7 @@
     self.inFieldLighthouseImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
     self.inFieldLighthouseImageView.translatesAutoresizingMaskIntoConstraints = NO;
     
-    self.inFieldLighthouseImageView.image = [UIImage imageNamed:@"Lighthouse-in-Field"];
+    self.inFieldLighthouseImageView.image = self.passedImage;
     
     [self.scrollView addSubview:self.inFieldLighthouseImageView];
     
@@ -78,7 +78,6 @@
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
     return self.inFieldLighthouseImageView;
 }
-
 
 /*
 #pragma mark - Navigation

@@ -7,9 +7,22 @@
 //
 
 #import "ViewController.h"
+#import "DetailViewController.h"
 
 @interface ViewController ()
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
+
+@property (strong, nonatomic) UITapGestureRecognizer *tapGestureRecognizer;
+
+@property (strong, nonatomic) UIImageView *inFieldLighthouseImageView;
+
+@property (strong, nonatomic) UIImageView *nightLighthouseImageView;
+
+@property (strong, nonatomic) UIImageView *zoomLighthouseImageView;
+
+@property (strong, nonatomic) UINavigationController *navigationController;
+
+@property (strong, nonatomic) UIImage *imageToPass;
 
 @end
 
@@ -19,14 +32,13 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
-//    UIView *contentView = [[UIView alloc] init];
-//    [self.scrollView addSubview:contentView];
-    
     self.scrollView.scrollEnabled = YES;
     self.scrollView.pagingEnabled = YES;
     
-    [self setUpImages];
+    self.tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(panHandler:)];
+    [self.view addGestureRecognizer:self.tapGestureRecognizer];
     
+    [self setUpImages];
     
 }
 
@@ -37,16 +49,21 @@
 
 - (void)setUpImages {
     
+    self.imageToPass = [[UIImage alloc] init];
+    
     // add in field lighthouse image
     
-    UIImageView *inFieldLighthouseImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
-    inFieldLighthouseImageView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.inFieldLighthouseImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
     
-    inFieldLighthouseImageView.image = [UIImage imageNamed:@"Lighthouse-in-Field"];
+    self.inFieldLighthouseImageView.tag = 1;
     
-    [self.scrollView addSubview:inFieldLighthouseImageView];
+    self.inFieldLighthouseImageView.translatesAutoresizingMaskIntoConstraints = NO;
     
-    [self.scrollView addConstraint:[NSLayoutConstraint constraintWithItem:inFieldLighthouseImageView
+    self.inFieldLighthouseImageView.image = [UIImage imageNamed:@"Lighthouse-in-Field"];
+    
+    [self.scrollView addSubview:self.inFieldLighthouseImageView];
+    
+    [self.scrollView addConstraint:[NSLayoutConstraint constraintWithItem:self.inFieldLighthouseImageView
                                                           attribute:NSLayoutAttributeCenterX
                                                           relatedBy:NSLayoutRelationEqual
                                                              toItem:self.scrollView
@@ -54,7 +71,7 @@
                                                          multiplier:1.0
                                                            constant:0.0]];
     
-    [self.scrollView addConstraint:[NSLayoutConstraint constraintWithItem:inFieldLighthouseImageView
+    [self.scrollView addConstraint:[NSLayoutConstraint constraintWithItem:self.inFieldLighthouseImageView
                                                           attribute:NSLayoutAttributeCenterY
                                                           relatedBy:NSLayoutRelationEqual
                                                              toItem:self.scrollView
@@ -62,7 +79,7 @@
                                                          multiplier:1.0
                                                            constant:0.0]];
     
-    [self.scrollView addConstraint:[NSLayoutConstraint constraintWithItem:inFieldLighthouseImageView
+    [self.scrollView addConstraint:[NSLayoutConstraint constraintWithItem:self.inFieldLighthouseImageView
                                                           attribute:NSLayoutAttributeWidth
                                                           relatedBy:NSLayoutRelationEqual
                                                              toItem:nil
@@ -70,7 +87,7 @@
                                                          multiplier:1.0
                                                            constant:320]];
     
-    [self.scrollView addConstraint:[NSLayoutConstraint constraintWithItem:inFieldLighthouseImageView
+    [self.scrollView addConstraint:[NSLayoutConstraint constraintWithItem:self.inFieldLighthouseImageView
                                                           attribute:NSLayoutAttributeHeight
                                                           relatedBy:NSLayoutRelationEqual
                                                              toItem:nil
@@ -78,7 +95,7 @@
                                                          multiplier:1.0
                                                            constant:200]];
     
-    [self.scrollView addConstraint:[NSLayoutConstraint constraintWithItem:inFieldLighthouseImageView
+    [self.scrollView addConstraint:[NSLayoutConstraint constraintWithItem:self.inFieldLighthouseImageView
                                                                 attribute:NSLayoutAttributeLeft
                                                                 relatedBy:NSLayoutRelationEqual
                                                                    toItem:self.scrollView
@@ -89,15 +106,15 @@
     
     // add night lighthouse image
     
-    UIImageView *nightLighthouseImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
-    nightLighthouseImageView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.nightLighthouseImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
+    self.nightLighthouseImageView.translatesAutoresizingMaskIntoConstraints = NO;
     
-    nightLighthouseImageView.image = [UIImage imageNamed:@"Lighthouse-night"];
+    self.nightLighthouseImageView.image = [UIImage imageNamed:@"Lighthouse-night"];
     
-    [self.scrollView addSubview:nightLighthouseImageView];
+    [self.scrollView addSubview:self.nightLighthouseImageView];
     
     
-    [self.scrollView addConstraint:[NSLayoutConstraint constraintWithItem:nightLighthouseImageView
+    [self.scrollView addConstraint:[NSLayoutConstraint constraintWithItem:self.nightLighthouseImageView
                                                                 attribute:NSLayoutAttributeCenterY
                                                                 relatedBy:NSLayoutRelationEqual
                                                                    toItem:self.scrollView
@@ -105,15 +122,15 @@
                                                                multiplier:1.0
                                                                  constant:0.0]];
     
-    [self.scrollView addConstraint:[NSLayoutConstraint constraintWithItem:nightLighthouseImageView
+    [self.scrollView addConstraint:[NSLayoutConstraint constraintWithItem:self.nightLighthouseImageView
                                                                 attribute:NSLayoutAttributeLeft
                                                                 relatedBy:NSLayoutRelationEqual
-                                                                   toItem:inFieldLighthouseImageView
+                                                                   toItem:self.inFieldLighthouseImageView
                                                                 attribute:NSLayoutAttributeRight
                                                                multiplier:1.0
                                                                  constant:0.0]];
     
-    [self.scrollView addConstraint:[NSLayoutConstraint constraintWithItem:nightLighthouseImageView
+    [self.scrollView addConstraint:[NSLayoutConstraint constraintWithItem:self.nightLighthouseImageView
                                                                 attribute:NSLayoutAttributeWidth
                                                                 relatedBy:NSLayoutRelationEqual
                                                                    toItem:nil
@@ -121,7 +138,7 @@
                                                                multiplier:1.0
                                                                  constant:320]];
     
-    [self.scrollView addConstraint:[NSLayoutConstraint constraintWithItem:nightLighthouseImageView
+    [self.scrollView addConstraint:[NSLayoutConstraint constraintWithItem:self.nightLighthouseImageView
                                                                 attribute:NSLayoutAttributeHeight
                                                                 relatedBy:NSLayoutRelationEqual
                                                                    toItem:nil
@@ -131,15 +148,15 @@
     
     // add zoomed lighthouse image
     
-    UIImageView *zoomLighthouseImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
-    zoomLighthouseImageView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.zoomLighthouseImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
+    self.zoomLighthouseImageView.translatesAutoresizingMaskIntoConstraints = NO;
     
-    zoomLighthouseImageView.image = [UIImage imageNamed:@"Lighthouse-zoomed"];
+    self.zoomLighthouseImageView.image = [UIImage imageNamed:@"Lighthouse-zoomed"];
     
-    [self.scrollView addSubview:zoomLighthouseImageView];
+    [self.scrollView addSubview:self.zoomLighthouseImageView];
     
     
-    [self.scrollView addConstraint:[NSLayoutConstraint constraintWithItem:zoomLighthouseImageView
+    [self.scrollView addConstraint:[NSLayoutConstraint constraintWithItem:self.zoomLighthouseImageView
                                                                 attribute:NSLayoutAttributeCenterY
                                                                 relatedBy:NSLayoutRelationEqual
                                                                    toItem:self.scrollView
@@ -147,15 +164,15 @@
                                                                multiplier:1.0
                                                                  constant:0.0]];
     
-    [self.scrollView addConstraint:[NSLayoutConstraint constraintWithItem:zoomLighthouseImageView
+    [self.scrollView addConstraint:[NSLayoutConstraint constraintWithItem:self.zoomLighthouseImageView
                                                                 attribute:NSLayoutAttributeLeft
                                                                 relatedBy:NSLayoutRelationEqual
-                                                                   toItem:nightLighthouseImageView
+                                                                   toItem:self.nightLighthouseImageView
                                                                 attribute:NSLayoutAttributeRight
                                                                multiplier:1.0
                                                                  constant:0.0]];
     
-    [self.scrollView addConstraint:[NSLayoutConstraint constraintWithItem:zoomLighthouseImageView
+    [self.scrollView addConstraint:[NSLayoutConstraint constraintWithItem:self.zoomLighthouseImageView
                                                                 attribute:NSLayoutAttributeWidth
                                                                 relatedBy:NSLayoutRelationEqual
                                                                    toItem:nil
@@ -163,7 +180,7 @@
                                                                multiplier:1.0
                                                                  constant:320]];
     
-    [self.scrollView addConstraint:[NSLayoutConstraint constraintWithItem:zoomLighthouseImageView
+    [self.scrollView addConstraint:[NSLayoutConstraint constraintWithItem:self.zoomLighthouseImageView
                                                                 attribute:NSLayoutAttributeHeight
                                                                 relatedBy:NSLayoutRelationEqual
                                                                    toItem:nil
@@ -171,7 +188,7 @@
                                                                multiplier:1.0
                                                                  constant:420]];
     
-    [self.scrollView addConstraint:[NSLayoutConstraint constraintWithItem:zoomLighthouseImageView
+    [self.scrollView addConstraint:[NSLayoutConstraint constraintWithItem:self.zoomLighthouseImageView
                                                                 attribute:NSLayoutAttributeRight
                                                                 relatedBy:NSLayoutRelationEqual
                                                                    toItem:self.scrollView
@@ -179,6 +196,34 @@
                                                                multiplier:1.0
                                                                  constant:0.0]];
 
+}
+
+-(void)panHandler:(UITapGestureRecognizer *)recognizer {
+    CGPoint pointInView = [recognizer locationInView:self.scrollView];
+    
+    if (CGRectContainsPoint(self.inFieldLighthouseImageView.frame, pointInView)) {
+        self.imageToPass = self.inFieldLighthouseImageView.image;
+        [self performSegueWithIdentifier:@"detailSegue" sender:self.imageToPass];
+    } else if (CGRectContainsPoint(self.nightLighthouseImageView.frame, pointInView)) {
+        self.imageToPass = self.nightLighthouseImageView.image;
+        [self performSegueWithIdentifier:@"detailSegue" sender:self.imageToPass];
+    } else if (CGRectContainsPoint(self.zoomLighthouseImageView.frame, pointInView)) {
+        self.imageToPass = self.zoomLighthouseImageView.image;
+        [self performSegueWithIdentifier:@"detailSegue" sender:self.imageToPass];
+    }
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    DetailViewController *destinationDetailViewController = [segue destinationViewController];
+    
+    // myDestinationViewController.variable = sourceViewController variabe
+    destinationDetailViewController.passedImage = self.imageToPass;
+}
+
+-(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    return YES;
 }
 
 @end
