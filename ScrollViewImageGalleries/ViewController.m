@@ -24,6 +24,10 @@
 
 @property (strong, nonatomic) UIImage *imageToPass;
 
+@property (weak, nonatomic) IBOutlet UIPageControl *pageControl;
+
+@property (assign) int currentPage;
+
 @end
 
 @implementation ViewController
@@ -35,7 +39,7 @@
     self.scrollView.scrollEnabled = YES;
     self.scrollView.pagingEnabled = YES;
     
-    self.tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(panHandler:)];
+    self.tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapHandler:)];
     [self.view addGestureRecognizer:self.tapGestureRecognizer];
     
     [self setUpImages];
@@ -55,11 +59,11 @@
     
     self.inFieldLighthouseImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
     
-    self.inFieldLighthouseImageView.tag = 1;
-    
     self.inFieldLighthouseImageView.translatesAutoresizingMaskIntoConstraints = NO;
     
     self.inFieldLighthouseImageView.image = [UIImage imageNamed:@"Lighthouse-in-Field"];
+    
+    self.inFieldLighthouseImageView.contentMode = UIViewContentModeScaleAspectFit;
     
     [self.scrollView addSubview:self.inFieldLighthouseImageView];
     
@@ -85,7 +89,7 @@
                                                              toItem:nil
                                                           attribute:NSLayoutAttributeNotAnAttribute
                                                          multiplier:1.0
-                                                           constant:320]];
+                                                           constant:self.view.frame.size.width]];
     
     [self.scrollView addConstraint:[NSLayoutConstraint constraintWithItem:self.inFieldLighthouseImageView
                                                           attribute:NSLayoutAttributeHeight
@@ -93,7 +97,7 @@
                                                              toItem:nil
                                                           attribute:NSLayoutAttributeNotAnAttribute
                                                          multiplier:1.0
-                                                           constant:200]];
+                                                           constant:self.view.frame.size.height]];
     
     [self.scrollView addConstraint:[NSLayoutConstraint constraintWithItem:self.inFieldLighthouseImageView
                                                                 attribute:NSLayoutAttributeLeft
@@ -110,6 +114,8 @@
     self.nightLighthouseImageView.translatesAutoresizingMaskIntoConstraints = NO;
     
     self.nightLighthouseImageView.image = [UIImage imageNamed:@"Lighthouse-night"];
+    
+    self.nightLighthouseImageView.contentMode = UIViewContentModeScaleAspectFit;
     
     [self.scrollView addSubview:self.nightLighthouseImageView];
     
@@ -136,7 +142,7 @@
                                                                    toItem:nil
                                                                 attribute:NSLayoutAttributeNotAnAttribute
                                                                multiplier:1.0
-                                                                 constant:320]];
+                                                                 constant:self.view.frame.size.width]];
     
     [self.scrollView addConstraint:[NSLayoutConstraint constraintWithItem:self.nightLighthouseImageView
                                                                 attribute:NSLayoutAttributeHeight
@@ -144,7 +150,7 @@
                                                                    toItem:nil
                                                                 attribute:NSLayoutAttributeNotAnAttribute
                                                                multiplier:1.0
-                                                                 constant:200]];
+                                                                 constant:self.view.frame.size.height]];
     
     // add zoomed lighthouse image
     
@@ -152,6 +158,9 @@
     self.zoomLighthouseImageView.translatesAutoresizingMaskIntoConstraints = NO;
     
     self.zoomLighthouseImageView.image = [UIImage imageNamed:@"Lighthouse-zoomed"];
+    
+    self.zoomLighthouseImageView.contentMode = UIViewContentModeScaleAspectFit;
+
     
     [self.scrollView addSubview:self.zoomLighthouseImageView];
     
@@ -178,7 +187,7 @@
                                                                    toItem:nil
                                                                 attribute:NSLayoutAttributeNotAnAttribute
                                                                multiplier:1.0
-                                                                 constant:320]];
+                                                                 constant:self.view.frame.size.width]];
     
     [self.scrollView addConstraint:[NSLayoutConstraint constraintWithItem:self.zoomLighthouseImageView
                                                                 attribute:NSLayoutAttributeHeight
@@ -186,7 +195,7 @@
                                                                    toItem:nil
                                                                 attribute:NSLayoutAttributeNotAnAttribute
                                                                multiplier:1.0
-                                                                 constant:420]];
+                                                                 constant:self.view.frame.size.height]];
     
     [self.scrollView addConstraint:[NSLayoutConstraint constraintWithItem:self.zoomLighthouseImageView
                                                                 attribute:NSLayoutAttributeRight
@@ -198,7 +207,7 @@
 
 }
 
--(void)panHandler:(UITapGestureRecognizer *)recognizer {
+-(void)tapHandler:(UITapGestureRecognizer *)recognizer {
     CGPoint pointInView = [recognizer locationInView:self.scrollView];
     
     if (CGRectContainsPoint(self.inFieldLighthouseImageView.frame, pointInView)) {
@@ -225,5 +234,24 @@
 {
     return YES;
 }
+
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    CGFloat pageWidth = self.scrollView.frame.size.width;
+    float fractionalPage = self.scrollView.contentOffset.x / pageWidth;
+    NSInteger page = lround(fractionalPage);
+    self.pageControl.currentPage = page;
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+- (IBAction)scrollToNextPage:(UIPageControl *)sender {
+    if (self.pageControl.currentPage < self.pageControl.numberOfPages) {
+        CGPoint newX = CGPointMake(self.scrollView.frame.size.width * (self.pageControl.currentPage), self.scrollView.frame.origin.y);
+        [self.scrollView setContentOffset:newX animated:YES];
+    }
+}
+
 
 @end
